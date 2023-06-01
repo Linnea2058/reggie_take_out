@@ -1,5 +1,5 @@
 function loginApi(data) {
-  return $axios({
+  return $axios({ //发送异步请求 post方法
     'url': '/employee/login',
     'method': 'post',
     data

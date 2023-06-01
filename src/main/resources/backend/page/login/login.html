@@ -96,14 +96,18 @@
       },
       methods: {
         async handleLogin() {
-          this.$refs.loginForm.validate(async (valid) => {
+          console.log("进入handleLogin..")
+          this.$refs.loginForm.validate(async (valid) => { //校验表单
             if (valid) {
               this.loading = true
-              let res = await loginApi(this.loginForm)
-              if (String(res.code) === '1') {
+              console.log("进入handleLogin2..")
+              let res = await loginApi(this.loginForm) //发送异步请求，验证用户名、密码是否正确
+              console.log("进入handleLogin3..")
+              console.log(res)
+              if (String(res.code) === '1') { //登录成功
                 localStorage.setItem('userInfo',JSON.stringify(res.data))
                 window.location.href= '/backend/index.html'
-              } else {
+              } else { //登录失败
                 this.$message.error(res.msg)
                 this.loading = false
               }

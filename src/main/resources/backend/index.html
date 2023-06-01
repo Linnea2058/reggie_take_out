@@ -79,7 +79,7 @@
               <span>{{headTitle}}</span>
             </div>
             <div class="right-menu">
-              <div class="avatar-wrapper">{{ userInfo.name }}</div>
+              <div class="avatar-wrapper">{{ userInfo.name }}</div><!--动态显示登录者的消息-->
               <!-- <div class="logout" @click="logout">退出</div> -->
               <img src="images/icons/btn_close@2x.png" class="outLogin" alt="退出" @click="logout" />
             </div>
@@ -164,7 +164,7 @@
         },
         computed: {},
         created() {
-          const userInfo = window.localStorage.getItem('userInfo')
+          const userInfo = window.localStorage.getItem('userInfo')//从浏览器缓存中拿数据
           if (userInfo) {
             this.userInfo = JSON.parse(userInfo)
           }
@@ -181,7 +181,7 @@
           logout() {
             logoutApi().then((res)=>{
               if(res.code === 1){
-                localStorage.removeItem('userInfo')
+                localStorage.removeItem('userInfo')/*删除*/
                 window.location.href = '/backend/page/login/login.html'
               }
             })

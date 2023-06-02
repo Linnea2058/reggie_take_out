@@ -44,10 +44,10 @@
 
   // 响应拦截器
   service.interceptors.response.use(res => {
-      if (res.data.code === 0 && res.data.msg === 'NOTLOGIN') {// 返回登录页面
+      if (res.data.code === 0 && res.data.msg === 'NOTLOGIN') {// 若响应的数据中msg是'NOTLOGIN'，则返回登录页面
         console.log('---/backend/page/login/login.html---')
         localStorage.removeItem('userInfo')
-        window.top.location.href = '/backend/page/login/login.html'
+        window.top.location.href = '/backend/page/login/login.html'//登录页面
       } else {
         return res.data
       }

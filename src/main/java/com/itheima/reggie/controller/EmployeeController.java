@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 
 @RestController
 @Slf4j
@@ -66,5 +67,23 @@ public class EmployeeController {
         //清除session中的数据
         request.getSession().removeAttribute("employee");
         return R.success("退出成功");
+    }
+
+    @PostMapping()
+    public R<String> add(HttpServletRequest request, @RequestBody Employee employee){
+        //1.初始时给默认密码，用md5加密
+        employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
+
+        //2.补全employee的创建时间和修改时间
+        employee.setCreateTime(LocalDateTime.now());
+        employee.setUpdateTime(LocalDateTime.now());
+
+        //2.补全employee的创建者和修改者
+        long uerId = (long) request.getSession().getAttribute("employee");//session中去除的数据都是object,需要强转
+        employee.setCreateUser(uerId);
+        employee.setUpdateUser(uerId);
+
+        boolean save = employeeService.save(employee);
+        return R.success("添加成功");
     }
 }

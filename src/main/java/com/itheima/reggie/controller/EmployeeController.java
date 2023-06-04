@@ -3,16 +3,15 @@ package com.itheima.reggie.controller;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itheima.reggie.common.R;
 import com.itheima.reggie.entity.Employee;
 import com.itheima.reggie.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -69,6 +68,12 @@ public class EmployeeController {
         return R.success("退出成功");
     }
 
+    /**
+     * 添加员工
+     * @param request
+     * @param employee
+     * @return
+     */
     @PostMapping()
     public R<String> add(HttpServletRequest request, @RequestBody Employee employee){
         //1.初始时给默认密码，用md5加密
@@ -85,5 +90,27 @@ public class EmployeeController {
 
         boolean save = employeeService.save(employee);
         return R.success("添加成功");
+    }
+
+    @GetMapping("/page")
+    public R<Page> page(int page, int pageSize, String name){
+        //log.info("page={},pageSize={},name={}",page, pageSize, name);
+
+        //构造分页构造器
+        Page pageInfo = new Page(page, pageSize);
+
+        //条件构造器
+        LambdaQueryWrapper<Employee> lambdaQueryWrapper = new LambdaQueryWrapper();
+
+        //name条件(模糊查询)
+        lambdaQueryWrapper.like(name != null, Employee::getName, name);
+        //排序
+        lambdaQueryWrapper.orderByDesc(Employee::getUpdateTime);
+
+        //执行查询
+        employeeService.page(pageInfo, lambdaQueryWrapper);
+
+
+        return R.success(pageInfo);
     }
 }

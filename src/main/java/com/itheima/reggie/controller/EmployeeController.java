@@ -76,14 +76,15 @@ public class EmployeeController {
         //1.初始时给默认密码，用md5加密
         employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
 
-        //2.补全employee的创建时间和修改时间
+        //2.补全employee的创建时间、修改时间、创建者、修改者 的操作利用mybatis plus的公共字段自动填充来做
+        /*//2.补全employee的创建时间和修改时间
         employee.setCreateTime(LocalDateTime.now());
         employee.setUpdateTime(LocalDateTime.now());
 
         //2.补全employee的创建者和修改者
         long uerId = (long) request.getSession().getAttribute("employee");//session中去除的数据都是object,需要强转
         employee.setCreateUser(uerId);
-        employee.setUpdateUser(uerId);
+        employee.setUpdateUser(uerId);*/
 
         boolean save = employeeService.save(employee);
         return R.success("添加成功");
@@ -125,10 +126,6 @@ public class EmployeeController {
      */
     @PutMapping
     public R<String> update(HttpServletRequest request, @RequestBody Employee employee){
-
-        long empId = (long) request.getSession().getAttribute("employee");
-        employee.setUpdateUser(empId);
-        employee.setUpdateTime(LocalDateTime.now());
 
         employeeService.updateById(employee);
 

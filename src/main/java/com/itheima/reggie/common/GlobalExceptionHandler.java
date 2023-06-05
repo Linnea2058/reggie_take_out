@@ -11,7 +11,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.SQLInvalidAuthorizationSpecException;
 
 
-//该通知拦截包含annotations注解的类
+//该通知拦截包含用annotations注解的类
 @ControllerAdvice(annotations = {RestController.class, Controller.class})
 @Slf4j
 //将结果转成json格式返回
@@ -27,5 +27,19 @@ public class GlobalExceptionHandler {
             return R.error(msg);
         }
         return R.error("出错了");
+    }
+
+
+    /**
+     * 业务异常处理方法
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(CustomException.class)
+    public R<String> exceptionHandler(CustomException ex){//参数表示拦截数据库返回的错误
+
+        log.error(ex.getMessage());
+
+        return R.error(ex.getMessage());
     }
 }

@@ -67,7 +67,7 @@ public class CategoryController {
 
         log.info("删除{}",ids);
         //需要检查待删除的分类是否关联了菜品或套餐，此处未实现直接删除了分类
-        categoryService.removeById(ids);
+        categoryService.remove(ids);
         return R.success("删除成功");
     }
 

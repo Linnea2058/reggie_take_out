@@ -2,6 +2,7 @@ package com.itheima.reggie.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.itheima.reggie.common.BaseContext;
 import com.itheima.reggie.common.R;
 import com.itheima.reggie.entity.Employee;
 import com.itheima.reggie.service.EmployeeService;
@@ -11,6 +12,7 @@ import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.*;
 import java.time.LocalDateTime;
 
 @RestController
@@ -85,6 +87,9 @@ public class EmployeeController {
         long uerId = (long) request.getSession().getAttribute("employee");//session中去除的数据都是object,需要强转
         employee.setCreateUser(uerId);
         employee.setUpdateUser(uerId);*/
+
+        long uerId = (long) request.getSession().getAttribute("employee");//session中去除的数据都是object,需要强转
+        BaseContext.setCurrentId(uerId);
 
         boolean save = employeeService.save(employee);
         return R.success("添加成功");

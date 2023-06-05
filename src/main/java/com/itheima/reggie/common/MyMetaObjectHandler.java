@@ -11,6 +11,10 @@ import java.time.LocalDateTime;
 @Slf4j
 @Component
 public class MyMetaObjectHandler implements MetaObjectHandler {
+    /**
+     * 插入数据时，公共字段自动填充
+     * @param metaObject
+     */
     @Override
     public void insertFill(MetaObject metaObject) {
         log.info("插入时公共字段自动填充");
@@ -18,14 +22,18 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
         //对公共字段的操作
         metaObject.setValue("createTime", LocalDateTime.now());
         metaObject.setValue("updateTime", LocalDateTime.now());
-        metaObject.setValue("createUser", (long)2);//目前无法获得session中的employee，暂且使用假数据
-        metaObject.setValue("updateUser", (long)2);
+        metaObject.setValue("createUser", BaseContext.getCurrentId());//利用ThreadLocal获得session中的employee
+        metaObject.setValue("updateUser", BaseContext.getCurrentId());
     }
 
+    /**
+     * 插入和更新数据时，公共字段自动填充
+     * @param metaObject
+     */
     @Override
     public void updateFill(MetaObject metaObject) {
         log.info("插入和更新时公共字段自动填充");
         metaObject.setValue("updateTime", LocalDateTime.now());
-        metaObject.setValue("updateUser", (long)2);
+        metaObject.setValue("updateUser", BaseContext.getCurrentId());
     }
 }

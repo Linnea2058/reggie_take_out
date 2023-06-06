@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @Slf4j
 @RequestMapping("category")
@@ -71,4 +73,16 @@ public class CategoryController {
         return R.success("删除成功");
     }
 
+    /**
+     * 修改分类信息
+     * @param category
+     * @return
+     */
+    @PutMapping
+    public R<String> update(@RequestBody Category category){
+
+        categoryService.updateById(category);
+
+        return R.success("修改分类成功");
+    }
 }

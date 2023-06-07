@@ -4,13 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itheima.reggie.common.R;
 import com.itheima.reggie.entity.Category;
-import com.itheima.reggie.entity.Employee;
 import com.itheima.reggie.service.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -84,5 +84,21 @@ public class CategoryController {
         categoryService.updateById(category);
 
         return R.success("修改分类成功");
+    }
+
+    /**
+     * 查询菜品分类
+     * @param category
+     * @return
+     */
+    @GetMapping("/list")
+    private R<List<Category>> list(Category category){
+
+        LambdaQueryWrapper<Category> lambdaQueryWrapper =new LambdaQueryWrapper();
+
+        lambdaQueryWrapper.eq(category.getType()!=null,Category::getType,category.getType());
+        lambdaQueryWrapper.orderByDesc(Category::getSort).orderByDesc(Category::getUpdateTime);
+        List<Category> list = categoryService.list(lambdaQueryWrapper);
+        return R.success(list);
     }
 }

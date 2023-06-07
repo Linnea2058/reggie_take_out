@@ -32,7 +32,8 @@ public class LoginCheckFilter implements Filter {
                 "/employee/login",
                 "/employee/logout",
                 "/backend/**",
-                "/front/**"
+                "/front/**",
+                "/common/**"
         };
         if(check(requestURI,urls)){
             filterChain.doFilter(request,response);//放行

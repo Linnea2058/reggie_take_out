@@ -19,6 +19,9 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
 
     @Autowired
     private DishFlavorService dishFlavorService;
+
+    @Autowired
+    private DishService dishService;
     @Override
     @Transactional
     public void saveWithFlavor(DishDto dishDto) {
@@ -31,6 +34,8 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
             return item;
         }).collect(Collectors.toList());//collectors转成list
 
-        dishFlavorService.saveBatch(flavors);
+        dishFlavorService.saveBatch(flavors);//批量插入
     }
+
+
 }

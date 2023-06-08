@@ -34,7 +34,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
     public void saveWithFlavor(DishDto dishDto) {
         this.save(dishDto);//将dishDto中dish的信息添加到dish表
 
-        //从dishDto中获得口味数据（name、value），并且需要补充dish_id
+        //可以从dishDto中获得口味数据（name、value），并且需要补充dish_id
         List<DishFlavor> flavors = dishDto.getFlavors();
         flavors = flavors.stream().map((item)->{//匿名内部类，操作flavors中的数据
             item.setDishId(dishDto.getId());//获得并设置dish_id

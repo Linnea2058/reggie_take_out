@@ -52,6 +52,7 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
     }
 
     @Override
+    @Transactional
     public void deleteWithDish(List<Long> ids) {
         //查看套餐是否处于售卖阶段
         LambdaQueryWrapper<Setmeal> lambdaQueryWrapper = new LambdaQueryWrapper<>();

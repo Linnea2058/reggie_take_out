@@ -33,18 +33,28 @@ public class LoginCheckFilter implements Filter {
                 "/employee/logout",
                 "/backend/**",
                 "/front/**",
-                "/common/**"
+                "/common/**",
+                "/user/login",
+                "/user/sendMsg"
         };
         if(check(requestURI,urls)){
             filterChain.doFilter(request,response);//放行
             log.info("请求：{}直接放行",requestURI);
             return;
         }
-        //3.对于要求登录后才能访问的请求，判断用户是否登录
+        //3-1.对于要求登录后才能访问的请求，判断用户是否登录
         Long empId = (Long)request.getSession().getAttribute("employee");
         if(empId!=null){
             log.info("用户已登录，id:{}",empId);
             BaseContext.setCurrentId(empId);
+            filterChain.doFilter(request,response);//放行
+            return;
+        }
+        //3-2.对于要求登录后才能访问的请求，判断移动端用户是否登录
+        Long userId = (Long)request.getSession().getAttribute("user");
+        if(userId!=null){
+            log.info("用户已登录，id:{}",userId);
+            BaseContext.setCurrentId(userId);
             filterChain.doFilter(request,response);//放行
             return;
         }

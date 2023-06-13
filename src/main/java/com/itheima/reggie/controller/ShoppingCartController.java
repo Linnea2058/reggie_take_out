@@ -48,7 +48,7 @@ public class ShoppingCartController {
         LambdaQueryWrapper<ShoppingCart> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(ShoppingCart::getUserId, currentId);
         lambdaQueryWrapper.eq(shoppingCart.getDishId()!=null,ShoppingCart::getDishId, shoppingCart.getDishId());
-        lambdaQueryWrapper.eq(shoppingCart.getDishId()!=null,ShoppingCart::getDishFlavor, shoppingCart.getDishFlavor());
+        //lambdaQueryWrapper.eq(shoppingCart.getDishId()!=null,ShoppingCart::getDishFlavor, shoppingCart.getDishFlavor());
         lambdaQueryWrapper.eq(shoppingCart.getSetmealId()!=null,ShoppingCart::getSetmealId, shoppingCart.getSetmealId());
         ShoppingCart cartServiceOne = shoppingCartService.getOne(lambdaQueryWrapper);
         if(cartServiceOne!=null){
@@ -75,6 +75,7 @@ public class ShoppingCartController {
 
         //获得当前用户id,userId
         Long currentId = BaseContext.getCurrentId();
+
         LambdaQueryWrapper<ShoppingCart> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(ShoppingCart::getUserId, currentId);
         lambdaQueryWrapper.orderByAsc(ShoppingCart::getCreateTime);//按照加入菜品或套餐的时间升序排列
@@ -82,4 +83,53 @@ public class ShoppingCartController {
 
         return R.success(list);
     }
+
+    /**
+     * 清空购物车
+     * @return
+     */
+    @DeleteMapping("clean")
+    public R<String> clean(){
+        log.info("清空购物车...");
+
+        //获得当前用户id,userId
+        Long currentId = BaseContext.getCurrentId();
+
+        LambdaQueryWrapper<ShoppingCart> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(ShoppingCart::getUserId, currentId);
+        shoppingCartService.remove(lambdaQueryWrapper);
+
+        return R.success("清空成功");
+    }
+
+    /**
+     * 减少菜品
+     * @param shoppingCart
+     * @return
+     */
+    @PostMapping("/sub")
+    public R<String> sub(@RequestBody ShoppingCart shoppingCart){//前端传来一个json数据
+        log.info("待减少的菜品：{}", shoppingCart.toString());
+
+        //获得当前用户id,userId
+        Long currentId = BaseContext.getCurrentId();
+        shoppingCart.setUserId(currentId);
+
+        //减少菜品或套餐
+        LambdaQueryWrapper<ShoppingCart> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(ShoppingCart::getUserId, currentId);
+        lambdaQueryWrapper.eq(shoppingCart.getDishId()!=null,ShoppingCart::getDishId, shoppingCart.getDishId());
+        lambdaQueryWrapper.eq(shoppingCart.getSetmealId()!=null,ShoppingCart::getSetmealId, shoppingCart.getSetmealId());
+
+        ShoppingCart cartServiceOne = shoppingCartService.getOne(lambdaQueryWrapper);
+        if(cartServiceOne.getNumber()>1){
+            cartServiceOne.setNumber(cartServiceOne.getNumber()-1);
+            shoppingCartService.updateById(cartServiceOne);
+        }else{
+            shoppingCartService.remove(lambdaQueryWrapper);
+        }
+        
+        return R.success("菜品减少成功");
+    }
+
 }

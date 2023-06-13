@@ -128,7 +128,7 @@ public class ShoppingCartController {
         }else{
             shoppingCartService.remove(lambdaQueryWrapper);
         }
-        
+
         return R.success("菜品减少成功");
     }
 
